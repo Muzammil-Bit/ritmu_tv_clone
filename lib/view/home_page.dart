@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ritmu_tv_clone/constant.dart';
 import 'package:ritmu_tv_clone/view/draw_result_page.dart';
 
+// import '../test.dart';
 import 'live_tv_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,8 +17,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize: Size.fromHeight(60), child: customAppbar()),
+      appBar: PreferredSize(preferredSize: Size.fromHeight(60), child: customAppbar()),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
             InkWell(
                 onTap: () {
                   Get.to(() => LiveTvPage());
+                  // Get.to(() => TEST());
                 },
                 child: Image.asset('assets/live_tv.png', height: 170)),
             Text(

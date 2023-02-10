@@ -1,7 +1,13 @@
-import 'package:apivideo_live_stream/apivideo_live_stream.dart';
-import 'package:flick_video_player/flick_video_player.dart';
+// import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pod_player/pod_player.dart';
+import 'package:ritmu_tv_clone/controllers/video_controller.dart';
 import 'package:video_player/video_player.dart';
+
+import '../vimeo_player/vimeo_player.dart';
+
+const VIDEO = '797504822';
 
 class LiveTvPage extends StatefulWidget {
   const LiveTvPage({Key? key}) : super(key: key);
@@ -11,49 +17,29 @@ class LiveTvPage extends StatefulWidget {
 }
 
 class _LiveTvPageState extends State<LiveTvPage> {
-  // final ApiVideoLiveStreamController _controller = ApiVideoLiveStreamController(initialAudioConfig: AudioConfig(), initialVideoConfig: VideoConfig.withDefaultBitrate());
+  PodPlayerController? controller;
 
-  FlickManager? flickManager;
-  VideoPlayerController? videoPlayerController;
-
-  final vidURL = 'https://expense.lemonappsg.com/public/uploads/Test Video.mp4';
-  @override
-  void initState() {
-    videoPlayerController = VideoPlayerController.network(vidURL);
-    flickManager = FlickManager(videoPlayerController: videoPlayerController!, autoInitialize: true);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    flickManager?.dispose();
-    videoPlayerController?.dispose();
-  }
-
-  // init() async {
-  //   await _controller.startStreaming(
-  //     url: 'https://expense.lemonappsg.com/public/uploads/Test Video.mp4',
-  //     streamKey: '8BGYGRfPuqs6zaFHafdzNPgP6Uim44mkyKHHYkr1CfH',
-  //   );
-  // }
+  VideoController videoController = Get.find()..fetchVideo();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: Container(
-          height: 300,
-          alignment: Alignment.center,
-          child: flickManager == null
-              ? CircularProgressIndicator(
-                  color: Colors.red,
-                )
-              : FlickVideoPlayer(
-                  flickManager: flickManager!,
-                  flickVideoWithControls: FlickVideoWithControls(),
-                ),
+        child: Obx(
+          () {
+            return videoController.isLoading.value
+                ? CircularProgressIndicator(
+                    color: Colors.amber,
+                  )
+                : VimeoVideoPlayer(
+                    vimeoPlayerModel: VimeoPlayerModel(
+                      // url: 'https://vimeo.com/${VIDEO}',
+                      url: 'https://vimeo.com/395212534',
+                      startAt: Duration(seconds: 10),
+                    ),
+                  );
+          },
         ),
       ),
     );
