@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ritmu_tv_clone/constant.dart';
+import 'package:ritmu_tv_clone/test.dart';
 import 'package:ritmu_tv_clone/view/draw_result_page.dart';
 
 // import '../test.dart';
@@ -24,8 +25,8 @@ class _HomePageState extends State<HomePage> {
           children: [
             InkWell(
                 onTap: () {
-                  Get.to(() => LiveTvPage());
-                  // Get.to(() => TEST());
+                  // Get.to(() => LiveTvPage());
+                  Get.to(() => TestPage());
                 },
                 child: Image.asset('assets/live_tv.png', height: 170)),
             Text(

@@ -43,23 +43,28 @@ dependencies:
   fluttertoast: ^8.1.2
   loading_overlay: ^0.3.0
   video_player: ^2.5.1
-  pod_player: ^0.1.0
+  # pod_player: ^0.1.0
   dio: ^4.0.6
   flick_video_player: ^0.5.0
+  pod_player_new: ^0.0.6
+  # remedi_vimeo_player: ^0.2.1
+  vimeoplayer_mam: ^1.0.1
+  vimeo_video_player: ^0.0.6
+  youtube_player_flutter: ^8.1.2
+  # vimeo_player_flutter: ^0.0.3+2
+  # vimeo_video_player: ^0.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.11.0
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/live_tv.png"
+  min_sdk_android: 21
 
 # The following section is specific to Flutter packages.
 flutter:
