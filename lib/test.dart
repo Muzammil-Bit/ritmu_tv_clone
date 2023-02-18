@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:ritmu_tv_clone/controllers/video_controller.dart';
 import 'package:video_player/video_player.dart';
 import 'package:vimeoplayer_mam/vimeoplayer.dart';
@@ -13,13 +15,56 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  bool shouldShowContainer = true;
+  bool _shouldShowContainer = true;
+  bool _initialTimeSet = false;
+  YoutubePlayerController? _controller;
 
-  _hideThumbNail() async {
-    await Future.delayed(Duration(seconds: 4));
-    setState(() {
-      shouldShowContainer = false;
+  VideoController _videoController = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _videoController.fetchVideo();
     });
+
+    _videoController.videos.listen((p0) {
+      if (_videoController.videoUrl != null && mounted)
+        setState(() {
+          try {
+            _controller = YoutubePlayerController(
+              initialVideoId: YoutubePlayer.convertUrlToId(_videoController.videoUrl!)!,
+              flags: YoutubePlayerFlags(
+                autoPlay: true,
+                loop: true,
+                disableDragSeek: true,
+                enableCaption: false,
+                hideControls: true,
+                showLiveFullscreenButton: false,
+                mute: false,
+                hideThumbnail: true,
+              ),
+            );
+
+            _controller!.addListener(setInitialVideoStartPosition);
+          } catch (e) {}
+        });
+    });
+  }
+
+  setInitialVideoStartPosition() {
+    if (_initialTimeSet) return;
+
+    if (_controller!.metadata.author.trim().length != 0) {
+      _controller!.seekTo(Duration(seconds: _videoController.startAt % _controller!.value.metaData.duration.inSeconds));
+      _initialTimeSet = true;
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -27,32 +72,15 @@ class _TestPageState extends State<TestPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: FutureBuilder(
-            future: VideoController().fetchVideo(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return CircularProgressIndicator();
-              if (snapshot.hasError) return Text("Error");
-
-              YoutubePlayerController _controller = YoutubePlayerController(
-                initialVideoId: YoutubePlayer.convertUrlToId(snapshot.data![0].url)!,
-                flags: YoutubePlayerFlags(
-                  autoPlay: true,
-                  loop: true,
-                  disableDragSeek: true,
-                  enableCaption: false,
-                  hideControls: true,
-                  showLiveFullscreenButton: false,
-                  mute: false,
-                  startAt: 40,
-                ),
-              );
-              return Stack(
+        child: _controller == null
+            ? CircularProgressIndicator()
+            : Stack(
                 children: [
                   Container(
                     height: 250,
                     child: YoutubePlayer(
                       onReady: () => _hideThumbNail(),
-                      controller: _controller,
+                      controller: _controller!,
                       progressColors: ProgressBarColors(
                         handleColor: Colors.transparent,
                         backgroundColor: Colors.transparent,
@@ -76,14 +104,20 @@ class _TestPageState extends State<TestPage> {
                   AnimatedContainer(
                     duration: Duration(milliseconds: 600),
                     height: 250,
-                    color: shouldShowContainer ? Colors.white : Colors.transparent,
+                    color: _shouldShowContainer ? Colors.white : Colors.transparent,
                     alignment: Alignment.center,
-                    child: shouldShowContainer ? CircularProgressIndicator() : null,
+                    child: _shouldShowContainer ? CircularProgressIndicator() : null,
                   )
                 ],
-              );
-            }),
+              ),
       ),
     );
+  }
+
+  _hideThumbNail() async {
+    await Future.delayed(Duration(seconds: 4));
+    setState(() {
+      _shouldShowContainer = false;
+    });
   }
 }
