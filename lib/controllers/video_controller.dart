@@ -32,10 +32,11 @@ class VideoController extends GetxController {
     var startTime = videos.firstWhere((element) => element.type == 'secondary').startTime;
     var endTime = videos.firstWhere((element) => element.type == 'secondary').endTime;
     final currentTime = DateTime.now();
+
     if (currentTime.isAfter(DateTime.parse(startTime!)) && currentTime.isBefore(DateTime.parse(endTime!))) {
       return videos.firstWhere((element) => element.type == 'secondary').url;
     }
-    return videos.firstWhere((element) => element.type == 'secondary').url;
+    return videos.firstWhere((element) => element.type == 'primary').url;
   }
 
   int get startAt {
